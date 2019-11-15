@@ -1,0 +1,36 @@
+body {
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 18px;
+    }
+}
+
+.chat_list .list-group-item {
+    padding: 5px 4px;
+    min-height: 50px;
+}
+
+@media (max-width: 768px) {
+    .chat_list .list-group-item {
+        min-height: inherit;
+    }
+}
+
+.chat_list .list-group-item-text {
+    word-wrap: break-word;
+    display: flex;
+    overflow: auto;
+}
+
+.chat_list .pull-left {
+    width: 55px;
+    text-align: center;
+}
+
+.chat_bg {
+    padding: 20px 20% 20px 20%;
+    background-color: gray;
+}
