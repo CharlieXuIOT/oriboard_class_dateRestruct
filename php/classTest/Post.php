@@ -18,7 +18,8 @@ class Post
 
     function index($date)
     {
-        if ($date === "") {
+        $regex = "/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/";
+        if ($date === "" || preg_match($regex, $date) === 0) {
             $sql = "SELECT `post`.*,`member`.`account` FROM `post`,`member` 
             WHERE `post`.`member_id` = `member`.`id` 
             ORDER BY post_time DESC";

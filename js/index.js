@@ -29,7 +29,8 @@ $(document).ready(function () {
     });
 
     $("#dateSearch").click(function (e) {
-        if ($("#datepicker").val() != ""){
+        let regex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
+        if (regex.test($("#datepicker").val())){
             $.ajax({
                 type: "POST",
                 url: "/oriboard_class_dateRestruct/php/post.php",
@@ -43,7 +44,8 @@ $(document).ready(function () {
                 }
             });
         } else {
-            console.log("keyin something?");
+            $("#datepicker").val("");
+            alert("時間格式不符!");
         }
         
     });
@@ -83,42 +85,36 @@ $( function() {
 function dataToWeb(response, permission, account) {
     $("#list").empty();
     $.each(response, function (indexInArray, valueOfElement) {
+        let newEl = document.createElement('div');
+        newEl.textContent = valueOfElement["title"];
+        let tmpTitle = newEl.innerHTML;
+        // console.log(newEl.innerHTML, newEl.textContent);
+
         if (permission == 2) {
             if (valueOfElement["account"] === account) {
-                let newEl = document.createElement('div');
-                newEl.textContent = valueOfElement["title"];
-                let tmpTitle = newEl.innerHTML;
-                console.log(newEl.innerHTML, newEl.textContent);
                 $("#list").append('<li class="list-group-item"><small id="' + valueOfElement["id"] + '" class="pull-right text-muted"> \
-            <button class="glyphicon glyphicon-pencil modify"></button><button class="glyphicon glyphicon-remove remove"></button>'+
+                    <button class="glyphicon glyphicon-pencil modify"></button><button class="glyphicon glyphicon-remove remove"></button>'+
                     valueOfElement["post_time"] + '</small><div> \
-            <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
-            <p class="list-group-item-text"><pre>' + tmpTitle + '</pre></p></div></li>');
-            
-                // $("#list").append(document.createTextNode(valueOfElement["title"]));
-                // console.log(valueOfElement["title"]);
-                // $("#list").append('</pre></p></div></li>');
+                    <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
+                    <p class="list-group-item-text"><pre>' + tmpTitle + '</pre></p></div></li>');
             } else {
                 $("#list").append('<li class="list-group-item"><small id="' + valueOfElement["id"] + '" class="pull-right text-muted"> \
-                <button class="glyphicon glyphicon-remove remove"></button>'+
+                    <button class="glyphicon glyphicon-remove remove"></button>'+
                     valueOfElement["post_time"] + '</small><div> \
-                <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
-                <p class="list-group-item-text"><pre>'+ valueOfElement["title"] + '</pre></p></div></li>');
+                    <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
+                    <p class="list-group-item-text"><pre>'+ tmpTitle + '</pre></p></div></li>');
             }
         } else {
             if (valueOfElement["account"] === account) {
                 $("#list").append('<li class="list-group-item"><small id="' + valueOfElement["id"] + '" class="pull-right text-muted"> \
-            <button class="glyphicon glyphicon-pencil modify"></button><button class="glyphicon glyphicon-remove remove"></button>'+
+                    <button class="glyphicon glyphicon-pencil modify"></button><button class="glyphicon glyphicon-remove remove"></button>'+
                     valueOfElement["post_time"] + '</small><div> \
-            <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
-            <p class="list-group-item-text"><pre>');
-                $("#list").append(document.createTextNode(valueOfElement["title"]));
-                console.log(valueOfElement["title"]);
-                $("#list").append('</pre></p></div></li>');
+                    <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
+                    <p class="list-group-item-text"><pre>' + tmpTitle + '</pre></p></div></li>');
             } else {
                 $("#list").append('<li class="list-group-item"><small class="pull-right text-muted">' + valueOfElement["post_time"] + '</small><div> \
-            <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
-            <p class="list-group-item-text"><pre>'+ valueOfElement["title"] + '</pre></p></div></li>');
+                    <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
+                    <p class="list-group-item-text"><pre>'+ tmpTitle + '</pre></p></div></li>');
             }
         }
     });

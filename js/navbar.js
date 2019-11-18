@@ -13,6 +13,7 @@ $(document).ready(function () {
                 // $("#navAccount").text("Hi, " + response);
                 $("#navAccount").text("Hi, " + response["account"]);
                 $("#navAccount").removeClass('hidden');
+                $("#navUpload").removeClass('hidden');
                 $("#navNew").removeClass('hidden');
                 $("#navLogout").removeClass('hidden');
                 if (response["permission"] == 2){

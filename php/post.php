@@ -33,4 +33,4 @@ switch ($_POST["action"]) {
         ## add($_POST["title"]);
         echo $post->add($_POST["title"]);
         break;
-}
+};

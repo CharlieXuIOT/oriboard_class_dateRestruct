@@ -23,4 +23,13 @@ switch ($_POST["action"]) {
         ## logout();
         echo $member->logout();
         break;
+
+    case "showUpload":
+        ## showModify($_POST["id"]);
+        echo $member->showUpload();
+        break;
+
+    case "upload":
+        echo $member->upload($_FILES["file"]);
+        break;
 }
