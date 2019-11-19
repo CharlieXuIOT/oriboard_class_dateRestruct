@@ -33,7 +33,7 @@ $(document).ready(function () {
                     alert("上傳成功!");
                     location.reload();
                 } else {
-                    alert("檔案格式不符!");
+                    alert(data);
                 }
             }
         });

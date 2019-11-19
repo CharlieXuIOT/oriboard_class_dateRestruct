@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js'></script>
+</head>
+
+<body>
+    <p id="return"></p>
+</body>
+
+<script>
+    $.ajax({
+        type: "GET",
+        url: "test.php",
+        success: function (response) {
+            response = JSON.parse(response);
+            console.log(typeof(response));
+            if(response === true){
+                alert("very true");
+            }
+        }
+    });
+</script>
+
+</html>

@@ -16,9 +16,9 @@ class Member
         ## TODO: Implement __destruct() method.
     }
 
-    /* 
-    ** navbar顯示會員帳號
-    */
+    /**  
+     * navbar顯示會員帳號
+     */
     function navbar()
     {
         if (isset($_SESSION["account"]) === false) {
@@ -33,9 +33,9 @@ class Member
         return json_encode($arr);
     }
 
-    /*
-    ** 登入
-    */
+    /** 
+     * 登入
+     */
     function login($keyin_account, $keyin_password)
     {
         $regex = "/^[A-Za-z0-9]{3,}$/";
@@ -65,9 +65,9 @@ class Member
         }
     }
 
-    /*
-    ** 註冊
-    */
+    /** 
+     * 註冊
+     */
     function register($account, $password)
     {
         $regex = "/^[A-Za-z0-9]{3,}$/";
@@ -95,9 +95,9 @@ class Member
         }
     }
 
-    /*
-    ** 登出
-    */
+    /** 
+     * 登出
+     */
     function logout()
     {
         session_unset();
@@ -162,28 +162,28 @@ class Member
                     break;
             }
 
-            exit($mes);
+            return($mes);
         }
 
         ## 檢查檔案是否是通過 HTTP POST 上傳的
         if (!is_uploaded_file($fileInfo['tmp_name']))
-            exit('檔案不是通過 HTTP POST 方式上傳的');
+            return('檔案不是通過 HTTP POST 方式上傳的');
 
         ## 檢查上傳檔案是否為允許的檔案格式
         if (!is_array($allowExt))  ## 判斷參數是否為陣列
-            exit('檔案類型型態必須為 array');
+            return('檔案類型型態必須為 array');
         else {
             if (!in_array($ext, $allowExt))  ## 檢查陣列中是否有允許的檔案格式
-                exit('非法檔案類型');
+                return('檔案規格不符');
         }
 
         ## 檢查上傳檔案的容量大小是否符合規範
         if ($fileInfo['size'] > $maxSize)
-            exit('上傳檔案容量超過限制');
+            return('上傳檔案容量超過限制');
 
         ## 檢查是否為真實的圖片類型
         if ($flag && !@getimagesize($fileInfo['tmp_name']))
-            exit('不是真正的圖片類型');
+            return('不是真正的圖片類型');
 
         ## 檢查指定目錄是否存在，不存在就建立目錄
         if (!file_exists($uploadPath))
@@ -191,7 +191,7 @@ class Member
 
         ## 將檔案從臨時目錄移至指定目錄
         if (!@move_uploaded_file($fileInfo['tmp_name'], $destination))  ## 如果移動檔案失敗
-            exit('檔案移動失敗');
+            return('檔案移動失敗');
 
         require_once("mysql_connect.php");
         ## 預處理

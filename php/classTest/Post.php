@@ -90,7 +90,7 @@ class Post
         ## 先確認提出要求的是否為原作者
         $sql = "SELECT `member`.`account` FROM `post`,`member` WHERE `post`.`member_id` = `member`.`id` AND `post`.`id` = $id";
         $account = mysqli_query($this->conn, $sql)->fetch_object()->account;
-        if($account === $_SESSION["account"] || $_SESSION["permission"] === 2){
+        if($account === $_SESSION["account"] || $_SESSION["permission"] === 2) {
             ## 預處理
             $query = "DELETE FROM `post` WHERE id = ?";
             $stmt = $this->conn->prepare($query);
