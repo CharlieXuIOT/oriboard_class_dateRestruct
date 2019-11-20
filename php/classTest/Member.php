@@ -16,7 +16,7 @@ class Member
         ## TODO: Implement __destruct() method.
     }
 
-    /**  
+    /**
      * navbar顯示會員帳號
      */
     function navbar()
@@ -33,7 +33,7 @@ class Member
         return json_encode($arr);
     }
 
-    /** 
+    /**
      * 登入
      */
     function login($keyin_account, $keyin_password)
@@ -51,21 +51,19 @@ class Member
             $stmt->bind_result($password, $permission);
             $stmt->fetch();
 
-            if(password_verify($keyin_password, $password)){
+            $verify = password_verify($keyin_password, $password);
+            if ($verify) {
                 $_SESSION["account"] = $keyin_account;
                 $_SESSION["permission"] = $permission;
-                $this->conn->close();
-                return "success";
-            } else {
-                $this->conn->close();
-                return "fail";
             }
+            $this->conn->close();
+            return json_encode($verify);
         } else {
             return "formError";
         }
     }
 
-    /** 
+    /**
      * 註冊
      */
     function register($account, $password)
@@ -82,20 +80,15 @@ class Member
             ## 設置參數並執行
             $password = password_hash($password, PASSWORD_DEFAULT);
             $permission = 1;
-            if($stmt->execute()){
-                $this->conn->close();
-                return "success";
-            } else {
-                ## echo("Error: ".mysqli_error($conn));
-                $this->conn->close();
-                return "repeat";
-            };
+            ## echo("Error: ".mysqli_error($conn));
+            return json_encode($stmt->execute());
+            $this->conn->close();
         } else {
             return "formError";
         }
     }
 
-    /** 
+    /**
      * 登出
      */
     function logout()
@@ -105,8 +98,8 @@ class Member
         return "success";
     }
 
-    
-    function showUpload() 
+
+    function showUpload()
     {
         ## 預處理
         $stmt = $this->conn->prepare("SELECT image FROM `member` WHERE account = ?;");
@@ -162,28 +155,28 @@ class Member
                     break;
             }
 
-            return($mes);
+            return ($mes);
         }
 
         ## 檢查檔案是否是通過 HTTP POST 上傳的
         if (!is_uploaded_file($fileInfo['tmp_name']))
-            return('檔案不是通過 HTTP POST 方式上傳的');
+            return ('檔案不是通過 HTTP POST 方式上傳的');
 
         ## 檢查上傳檔案是否為允許的檔案格式
         if (!is_array($allowExt))  ## 判斷參數是否為陣列
-            return('檔案類型型態必須為 array');
+            return ('檔案類型型態必須為 array');
         else {
             if (!in_array($ext, $allowExt))  ## 檢查陣列中是否有允許的檔案格式
-                return('檔案規格不符');
+                return ('檔案規格不符');
         }
 
         ## 檢查上傳檔案的容量大小是否符合規範
         if ($fileInfo['size'] > $maxSize)
-            return('上傳檔案容量超過限制');
+            return ('上傳檔案容量超過限制');
 
         ## 檢查是否為真實的圖片類型
         if ($flag && !@getimagesize($fileInfo['tmp_name']))
-            return('不是真正的圖片類型');
+            return ('不是真正的圖片類型');
 
         ## 檢查指定目錄是否存在，不存在就建立目錄
         if (!file_exists($uploadPath))
@@ -191,7 +184,7 @@ class Member
 
         ## 將檔案從臨時目錄移至指定目錄
         if (!@move_uploaded_file($fileInfo['tmp_name'], $destination))  ## 如果移動檔案失敗
-            return('檔案移動失敗');
+            return ('檔案移動失敗');
 
         require_once("mysql_connect.php");
         ## 預處理
@@ -200,10 +193,6 @@ class Member
 
         ## 設置參數並執行
         $stmt->bind_param("ss", $destination, $_SESSION["account"]);
-        if($stmt->execute()){
-            return 'success';
-        } else {
-            return 'fail';
-        }
+        return(json_encode($stmt->execute()));
     }
 }

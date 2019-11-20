@@ -12,10 +12,11 @@ $(document).ready(function () {
                 "password": $password
             },
             success: function (response) {
-                if (response === "success") {
+                response = JSON.parse(response);
+                if (response === true) {
                     alert("登入成功!");
                     window.location.href = "index.html";
-                } else if (response === "fail") {
+                } else if (response === false) {
                     alert("請確認帳號或是密碼!");
                 }
             }

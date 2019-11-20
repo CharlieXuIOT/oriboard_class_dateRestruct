@@ -39,8 +39,13 @@ $(document).ready(function () {
                     "date": $("#datepicker").val()
                 },
                 success: function (response) {
-                    response = JSON.parse(response);
-                    dataToWeb(response, permission, account);
+                    if (response === "0") {
+                        $("#list").empty();
+                        $("#list").append('<li class="list-group-item"><p>蝦密攏謀</p></li>');
+                    } else {
+                        response = JSON.parse(response);
+                        dataToWeb(response, permission, account);
+                    }
                 }
             });
         } else {
@@ -68,7 +73,8 @@ $(document).on('click', '.remove', function (event) {
                 "id": id
             },
             success: function (response) {
-                if (response === "success") {
+                response = JSON.parse(response);
+                if (response === true) {
                     $("#" + id).parent().remove();
                 }
             }

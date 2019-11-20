@@ -54,10 +54,11 @@ $(document).ready(function () {
                     "password": $password
                 },
                 success: function (response) {
-                    if (response === "success") {
+                    response = JSON.parse(response);
+                    if (response === true) {
                         alert("註冊成功!");
                         window.location.href = "login.html";
-                    } else if (response === "repeat") {
+                    } else if (response === false) {
                         alert("帳號重複!");
                     }
                 }

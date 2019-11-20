@@ -111,7 +111,59 @@
 ?>
 
 <?php
-    // 前端收到boolean的true
-    $result = true;
-    echo json_encode($result);
+    // // 前端收到boolean的true
+    // $result = true;
+    // echo json_encode($result);
+
+    // 刪資料前先確認是否存在
+    // require_once("mysql_connect.php");
+    // // $query = "DELETE FROM `post` WHERE (id = ?) AND EXISTS(SELECT member_id FROM post WHERE id = ?) ";
+    // $query = "SELECT member_id FROM post WHERE id = ?";
+    // $stmt = $conn->prepare($query);
+    // $stmt->bind_param("i", $id);
+    // $stmt->execute();
+    // $stmt->bind_result($member_id);
+    // $stmt->fetch();
+    //
+    // if ($member_id == "") {
+    //     echo "empty";
+    // } else {
+    //     echo "come on :(";
+    // }
+
+    // $query = "DELETE FROM `post` WHERE id = ?";
+    // $stmt = $conn->prepare($query);
+    //
+    //  設置參數並執行
+    // // $stmt->bind_param("ii", $id, $id);
+    // $stmt->bind_param("i", $id);
+    // $id = "86";
+    // var_dump($stmt->execute());
+
+//select的預備語句，且查詢結果不指定變數接，而是取得一組陣列的寫法
+// require_once("mysql_connect.php");
+// $sql = "SELECT * FROM `post` WHERE `id` = ?";
+// $stmt = $conn->prepare($sql);
+//
+// $stmt->bind_param("i", $id);
+// $id = "22";
+//
+// $stmt->execute();
+// $row = $stmt->get_result()->fetch_assoc();
+// echo json_encode($row);
+
+// $sql = "SELECT `member`.`account` FROM `post`,`member` WHERE `post`.`member_id` = `member`.`id` AND `post`.`id` = ?";
+// $stmt = $conn->prepare($sql);
+// $stmt->bind_param("i", $id);
+// $id = "22";
+// $stmt->execute();
+// $stmt->bind_result($account);
+// $stmt->fetch();
+// echo $account;
+
+require_once("Post.php");
+$conn = "123";
+$post = new Post($conn);
+$post->verify();
+$post->test();
 ?>

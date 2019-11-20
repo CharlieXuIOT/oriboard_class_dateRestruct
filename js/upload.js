@@ -28,12 +28,13 @@ $(document).ready(function () {
             processData: false,
             data: form_data,     //data只能指定單一物件                 
             type: 'post',
-            success: function (data) {
-                if (data === "success") {
+            success: function (response) {
+                response = JSON.parse(response);
+                if (response === true) {
                     alert("上傳成功!");
                     location.reload();
                 } else {
-                    alert(data);
+                    alert(response);
                 }
             }
         });

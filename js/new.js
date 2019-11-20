@@ -12,7 +12,8 @@ $(document).ready(function () {
                     "title": title
                 },
                 success: function (response) {
-                    if (response === 'success') {
+                    response = JSON.parse(response);
+                    if (response === true) {                        
                         alert("新增成功!");
                         window.location.href = "index.html";
                     }
