@@ -1,14 +1,18 @@
 <?php
+require_once("Session.php");
 
-
-class Member
+class Member extends Session
 {
     private $conn;
+    protected $ss_account, $ss_permission;
 
     function __construct($conn)
     {
         $this->conn = $conn;
         session_start();
+        $arr = $this->verify();
+        $this->ss_account = $arr["account"];
+        $this->ss_permission = $arr["permission"];
     }
 
     function __destruct()
@@ -21,15 +25,9 @@ class Member
      */
     function navbar()
     {
-        if (isset($_SESSION["account"]) === false) {
-            ## 第一次訪問網站的遊客
-            $_SESSION["account"] = "";
-            $_SESSION["permission"] = 0;
-        } elseif ($_SESSION["account"] === "") {
-            $_SESSION["permission"] = 0;
-        }
-        $arr["account"] = $_SESSION["account"];
-        $arr["permission"] = $_SESSION["permission"];
+        $arr = array();
+        $arr["account"] = $this->ss_account;
+        $arr["permission"] = $this->ss_permission;
         return json_encode($arr);
     }
 
@@ -53,13 +51,13 @@ class Member
 
             $verify = password_verify($keyin_password, $password);
             if ($verify) {
-                $_SESSION["account"] = $keyin_account;
-                $_SESSION["permission"] = $permission;
+                $this->assign($keyin_account, $permission);
+                $this->verify();
             }
             $this->conn->close();
             return json_encode($verify);
         } else {
-            return "formError";
+            return json_encode(false);
         }
     }
 
@@ -84,7 +82,7 @@ class Member
             return json_encode($stmt->execute());
             $this->conn->close();
         } else {
-            return "formError";
+            return json_encode(false);
         }
     }
 
@@ -95,7 +93,7 @@ class Member
     {
         session_unset();
         session_destroy();
-        return "success";
+        return json_encode(true);
     }
 
 
@@ -103,14 +101,13 @@ class Member
     {
         ## 預處理
         $stmt = $this->conn->prepare("SELECT image FROM `member` WHERE account = ?;");
-        $stmt->bind_param("s", $_SESSION["account"]);
-
+        $stmt->bind_param("s", $this->ss_account);
         ## 設置參數並執行
         $stmt->execute();
         $stmt->bind_result($image);
         $stmt->fetch();
 
-        return $image;
+        return json_encode($image);
     }
 
     function upload($fileInfo, $allowExt = array('jpeg', 'jpg', 'gif', 'png'), $maxSize = 2097152, $flag = true, $uploadPath = '../uploads')
@@ -192,7 +189,7 @@ class Member
         $stmt = $this->conn->prepare($query);
 
         ## 設置參數並執行
-        $stmt->bind_param("ss", $destination, $_SESSION["account"]);
-        return(json_encode($stmt->execute()));
+        $stmt->bind_param("ss", $destination, $this->ss_account);
+        return json_encode($stmt->execute());
     }
 }

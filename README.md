@@ -20,3 +20,13 @@
 Vue,scss
 
 2019/11/20
+留言新增/修改內容不得為空
+刪除文章前先確認文章是否存在
+所有sql查詢使用預備語句
+統一前後端回復格式，增刪修一慮用true/false
+PSR-2
+將Post中的super global變數獨立成一個class(測試完成)
+研究json web token
+
+2019/11/21
+super global變數獨立成一個class(全部測試完成)

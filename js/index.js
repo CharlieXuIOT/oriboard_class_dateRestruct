@@ -39,11 +39,11 @@ $(document).ready(function () {
                     "date": $("#datepicker").val()
                 },
                 success: function (response) {
-                    if (response === "0") {
+                    response = JSON.parse(response);
+                    if (response === 0) {
                         $("#list").empty();
                         $("#list").append('<li class="list-group-item"><p>蝦密攏謀</p></li>');
                     } else {
-                        response = JSON.parse(response);
                         dataToWeb(response, permission, account);
                     }
                 }
@@ -100,13 +100,13 @@ function dataToWeb(response, permission, account) {
             if (valueOfElement["account"] === account) {
                 $("#list").append('<li class="list-group-item"><small id="' + valueOfElement["id"] + '" class="pull-right text-muted"> \
                     <button class="glyphicon glyphicon-pencil modify"></button><button class="glyphicon glyphicon-remove remove"></button>'+
-                    valueOfElement["post_time"] + '</small><div> \
+                    valueOfElement["create_at"] + '</small><div> \
                     <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
                     <p class="list-group-item-text"><pre>' + tmpTitle + '</pre></p></div></li>');
             } else {
                 $("#list").append('<li class="list-group-item"><small id="' + valueOfElement["id"] + '" class="pull-right text-muted"> \
                     <button class="glyphicon glyphicon-remove remove"></button>'+
-                    valueOfElement["post_time"] + '</small><div> \
+                    valueOfElement["create_at"] + '</small><div> \
                     <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
                     <p class="list-group-item-text"><pre>'+ tmpTitle + '</pre></p></div></li>');
             }
@@ -114,11 +114,11 @@ function dataToWeb(response, permission, account) {
             if (valueOfElement["account"] === account) {
                 $("#list").append('<li class="list-group-item"><small id="' + valueOfElement["id"] + '" class="pull-right text-muted"> \
                     <button class="glyphicon glyphicon-pencil modify"></button><button class="glyphicon glyphicon-remove remove"></button>'+
-                    valueOfElement["post_time"] + '</small><div> \
+                    valueOfElement["create_at"] + '</small><div> \
                     <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
                     <p class="list-group-item-text"><pre>' + tmpTitle + '</pre></p></div></li>');
             } else {
-                $("#list").append('<li class="list-group-item"><small class="pull-right text-muted">' + valueOfElement["post_time"] + '</small><div> \
+                $("#list").append('<li class="list-group-item"><small class="pull-right text-muted">' + valueOfElement["create_at"] + '</small><div> \
                     <small class="list-group-item-heading text-muted text-primary">'+ valueOfElement["account"] + '</small> \
                     <p class="list-group-item-text"><pre>'+ tmpTitle + '</pre></p></div></li>');
             }

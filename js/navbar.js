@@ -36,7 +36,8 @@ $(document).ready(function () {
                     "action": "logout"
                 },
                 success: function (response) {
-                    if (response === "success") {
+                    response = JSON.parse(response);
+                    if (response === true) {
                         window.location.href = "index.html";
                     }
                 }

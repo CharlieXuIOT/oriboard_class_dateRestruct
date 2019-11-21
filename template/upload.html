@@ -9,15 +9,45 @@
     <!-- jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+    <!-- bootstrap -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/navbar.css">
+
+    <script src="../js/navbar.js"></script>
     <script src="../js/upload.js"></script>
 </head>
 <body>
-    <h1>目前頭像</h1>
-    <img id="img" src="">
-    <br>
-    <input class="form-control" id="blockimg" type="file" accept="image/jpeg,image/jpg,image/gif,image/png">
-    <button id="upload">上傳</button>
-    <p>限制規格:jpeg, jpg, gif, png</p>
-    <p>限制大小:不超過2mb</p>
+    <nav class="navbar navbar-inverse">
+        <div class="navbar_gap">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html">Message Board</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a id="navAdmin" class="hidden"><span class="glyphicon glyphicon-wrench"></span> Admin</a></li>
+                    <li><a id="navRegister" href="register.html" class="hidden"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a id="navLogin" href="login.html" class="hidden"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a id="navAccount" class="hidden"></a></li>
+                    <li><a id="navUpload" href="upload.html" class="hidden"><span class="glyphicon glyphicon-upload"></span> Up</a></li>
+                    <li><a id="navNew" href="new.html" class="hidden"><span class="glyphicon glyphicon-plus"></span> New</a></li>
+                    <li><a id="navLogout" href="javascript: return false;" class="hidden"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-offset-5">
+            <h1>目前頭像</h1>
+            <img id="img" src="">
+            <br><br>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+            <p>限制規格:jpeg, jpg, gif, png</p>
+            <p>限制大小:不超過2mb</p>      
+        </div>
+    </div>
 </body>
 </html>

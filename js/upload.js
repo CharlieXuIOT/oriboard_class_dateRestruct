@@ -6,6 +6,7 @@ $(document).ready(function () {
             "action": "showUpload"
         },
         success: function (response) {
+            response = JSON.parse(response);
             if (response != ""){
                 $("#img").attr('src', response);
                 // $("#img").text(response);
