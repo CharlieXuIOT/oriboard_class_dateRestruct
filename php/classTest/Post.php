@@ -5,6 +5,8 @@ class Post extends Session
 {
     private $conn;
     protected $ss_account, $ss_permission;
+    ## 每頁有多少筆資料
+    private $row_per_page = 3;
 
     function __construct($conn)
     {
@@ -20,30 +22,43 @@ class Post extends Session
         ## TODO: Implement __destruct() method.
     }
 
-    function index($date)
+    function index($date, $page)
     {
         $regex = "/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/";
+        $arr = array();
+        $arr["page"] = $page;
+
+        ## 從第 $row 筆開始，顯示 $this->row_per_page 筆
+        $row = ($page - 1) * $this->row_per_page;
         if ($date === "" || preg_match($regex, $date) === 0) {
-            $sql = "SELECT `post`.*,`member`.`account` FROM `post`,`member` 
-            WHERE `post`.`member_id` = `member`.`id` 
-            ORDER BY create_at DESC";
+            $sql_totalPage = "SELECT `post`.*,`member`.`account` FROM `post`,`member` 
+                WHERE `post`.`member_id` = `member`.`id` 
+                ORDER BY create_at DESC";
         } else {
             $date = date_create($date);
             $date = date_format($date, 'Y/m/d');
-            $sql = "SELECT `post`.*,`member`.`account` FROM `post`,`member` 
-            WHERE (`post`.`member_id` = `member`.`id`)
-            AND (date(`create_at`) = date('$date'))
-            ORDER BY create_at DESC";
+            $sql_totalPage = "SELECT `post`.*,`member`.`account` FROM `post`,`member` 
+                WHERE (`post`.`member_id` = `member`.`id`)
+                AND (date(`create_at`) = date('$date'))
+                ORDER BY create_at DESC";
         }
-        $result = $this->conn->query($sql);
-        if ($result->num_rows === 0) {
-            return json_encode($result->num_rows);
+        $result_totalPage = $this->conn->query($sql_totalPage);
+        if ($result_totalPage->num_rows === 0) {
+            ## 查詢結果欄位=0，直接return
+            return json_encode($result_totalPage->num_rows);
+        } else {
+            ## 查詢結果欄位數>0，先算總頁數
+            $arr["pages"] = ceil($result_totalPage->num_rows/$this->row_per_page);
+            // mysqli_free_result($result_totalPage);
+            ## 再根據現在頁數找相對應的資料
+            $sql = $sql_totalPage . " LIMIT $row, $this->row_per_page";
+            $result = $this->conn->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $arr["data"][] = $row;
+            }
+            $this->conn->close();
+            return json_encode($arr);
         }
-        while ($row = $result->fetch_assoc()) {
-            $arr[] = $row;
-        }
-        $this->conn->close();
-        return json_encode($arr);
     }
 
     function add($title)

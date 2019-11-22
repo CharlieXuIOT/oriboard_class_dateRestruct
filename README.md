@@ -16,9 +16,6 @@
 2019/11/18
 新增上傳圖片功能
 
-2019/11/19
-Vue,scss
-
 2019/11/20
 留言新增/修改內容不得為空
 刪除文章前先確認文章是否存在
@@ -30,3 +27,21 @@ PSR-2
 
 2019/11/21
 super global變數獨立成一個class(全部測試完成)
+DB:
+>欄位編碼統一utf8_general_ci
+>permission僅1、2，用enum取代int
+>留言時間用PHPdate，不要用DB current_timestamp()
+class呼叫函數一定要有回應
+先定義變數為array，再塞值進去，不要直接塞
+class增刪修return格式統一
+upload頁面補上navbar
+token測試
+
+11/22
+DB:
+>id, permission屬性加上unsigned
+>permission類型設為boolean
+>password更改長度為60(hash後固定長度)
+>img更改長度為60(md5後固定長度為32)
+>img的相對路徑記在class不寫入資料庫
+HTML URL 编码

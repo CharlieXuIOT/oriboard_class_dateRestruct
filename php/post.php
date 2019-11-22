@@ -5,32 +5,34 @@ $post = new Post($conn);
 
 switch ($_POST["action"]) {
     case "index":
-        ## index();
-        if (isset($_POST["date"])){
-            echo $post->index($_POST["date"]);
+        if (isset($_POST["page"])){
+            if (isset($_POST["date"])){
+                echo $post->index($_POST["date"], $_POST["page"]);
+            } else {
+                echo $post->index("", $_POST["page"]);
+            }
         } else {
-            echo $post->index("");
+            if (isset($_POST["date"])){
+                echo $post->index($_POST["date"], "1");
+            } else {
+                echo $post->index("", "1");
+            }
         }
-        
         break;
 
     case "showModify":
-        ## showModify($_POST["id"]);
         echo $post->showModify($_POST["id"]);
         break;
 
     case "modify":
-        ## modify($_POST["id"], $_POST["title"]);
         echo $post->modify($_POST["id"], $_POST["title"]);
         break;
 
     case "remove":
-        ## remove($_POST["id"]);
         echo $post->remove($_POST["id"]);
         break;
 
     case "new":
-        ## add($_POST["title"]);
         echo $post->add($_POST["title"]);
         break;
 };

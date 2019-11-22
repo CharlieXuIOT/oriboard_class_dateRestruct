@@ -161,9 +161,16 @@
 // $stmt->fetch();
 // echo $account;
 
-require_once("Post.php");
-$conn = "123";
-$post = new Post($conn);
-$post->verify();
-$post->test();
+// require_once("Post.php");
+// $conn = "123";
+// $post = new Post($conn);
+// $post->verify();
+// $post->test();
+
+// 這是在return尛?
+$one = true;
+$two = true;
+$three = true;
+$result = $one && $two && $three;
+var_dump($result);
 ?>

@@ -5,6 +5,8 @@ class Member extends Session
 {
     private $conn;
     protected $ss_account, $ss_permission;
+    ## 放圖片的路徑
+    private $imgURL = "../uploads/";
 
     function __construct($conn)
     {
@@ -106,6 +108,7 @@ class Member extends Session
         $stmt->execute();
         $stmt->bind_result($image);
         $stmt->fetch();
+        $image = $this->imgURL.$image;
 
         return json_encode($image);
     }
@@ -189,7 +192,7 @@ class Member extends Session
         $stmt = $this->conn->prepare($query);
 
         ## 設置參數並執行
-        $stmt->bind_param("ss", $destination, $this->ss_account);
+        $stmt->bind_param("ss", $uniName, $this->ss_account);
         return json_encode($stmt->execute());
     }
 }
