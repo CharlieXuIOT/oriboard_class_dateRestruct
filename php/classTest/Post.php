@@ -6,7 +6,7 @@ class Post extends Session
     private $conn;
     protected $ss_account, $ss_permission;
     ## 每頁有多少筆資料
-    private $row_per_page = 3;
+    private $row_per_page = 5;
 
     function __construct($conn)
     {
@@ -24,13 +24,21 @@ class Post extends Session
 
     function index($date, $page)
     {
-        $regex = "/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/";
+        $date_regex = "/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/";
+        $page_regex = "/^\+?[1-9][0-9]*$/";
         $arr = array();
+        $sql = "SELECT id FROM `post`";
+        $result = $this->conn->query($sql);
+        $pages = ceil($result->num_rows/$this->row_per_page);
+        if (preg_match($page_regex, $page) === 0 || $page > $pages) {
+            $page =session_start();
+        }
+        
         $arr["page"] = $page;
 
         ## 從第 $row 筆開始，顯示 $this->row_per_page 筆
         $row = ($page - 1) * $this->row_per_page;
-        if ($date === "" || preg_match($regex, $date) === 0) {
+        if ($date === "" || preg_match($date_regex, $date) === 0) {
             $sql_totalPage = "SELECT `post`.*,`member`.`account` FROM `post`,`member` 
                 WHERE `post`.`member_id` = `member`.`id` 
                 ORDER BY create_at DESC";
@@ -140,5 +148,12 @@ class Post extends Session
                 return json_encode($stmt->execute());
             }
         }
+    }
+
+    function showToalPage()
+    {
+        $sql = "SELECT id FROM `post`";
+        $result = $this->conn->query($sql);
+        return ceil($result->num_rows/$this->row_per_page);
     }
 }

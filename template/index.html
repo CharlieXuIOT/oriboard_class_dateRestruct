@@ -55,7 +55,7 @@
     </nav>
 
     <div class="chat_bg">
-        <div class="col-xs-4 col-md-4 pull-right">
+        <!-- <div class="col-xs-4 col-md-4 pull-right">
             <div class="input-group">
                 <input type="text" id="datepicker" class="form-control" placeholder="Search" id="txtSearch" />
                 <div class="input-group-btn">
@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <br><br>
+        <br><br> -->
 
         <div class="chat_list">
             <ul id="list" class="list-group">
@@ -72,9 +72,20 @@
         </div>
     </div>
 
-    <div class="col-xs-4 col-md-4 pull-right" id="page">
-        <a id="1" style="color: black;">1</a>
-        <a href="javascript: void(0)" id="2">2</a>
+    <div class="col-md-6 col-md-offset-5">
+            <ul class="pagination" id="pagination">
+                <li class="active"><a href="#">1</a></li>
+            </ul>
+        <!-- <a id="1" style="color: black;">1</a>
+        <a href="javascript: void(0)" id="2">2</a> -->
+    </div>
+
+    <div class="col-md-6 col-md-offset-4 hidden" id="showModify">
+        <h1><strong>編輯訊息</strong></h1>
+        <textarea id="msg" cols="50" rows="5"></textarea>
+        <br>
+        <button class="sendModify">送出修改</button>
+        <button class="hideModify">取消修改</button>
     </div>
 </body>
 

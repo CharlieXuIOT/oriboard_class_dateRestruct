@@ -20,53 +20,99 @@ $(document).ready(function () {
     });
 
     /**
-     *  大廳的資料
+     *  向後端取資料並渲染到頁面上，如果URL有分頁key，就拿該分頁的資料
      */ 
-    $.ajax({
-        type: "POST",
-        url: "/oriboard_class_dateRestruct/php/post.php",
-        data: {
-            "action": "index"
-        },
-        success: function (response) {
-            response = JSON.parse(response);
-            // console.log(response["data"]);
-            dataToWeb(response["data"], permission, account);
-            showPage(response["page"], response["pages"]);
-        }
-    });
+    let url = new URL(window.location.href);
+    let params = url.searchParams;
+    if (params.has('page')) {
+        let url_page = url.searchParams.get('page');
+        $.ajax({
+            type: "GET",
+            url: "/oriboard_class_dateRestruct/php/post.php?page=" + url_page,
+            success: function (response) {
+                response = JSON.parse(response);
+                end_page = response["pages"];
+                dataToWeb(response["data"], permission, account);
+                showPage(response["page"], response["pages"]);
+            }
+        });
+    } else {
+        $.ajax({
+            type: "GET",
+            url: "/oriboard_class_dateRestruct/php/post.php",
+            success: function (response) {
+                response = JSON.parse(response);
+                end_page = response["pages"];
+                dataToWeb(response["data"], permission, account);
+                showPage(response["page"], response["pages"]);
+            }
+        });
+    }
 
     /**
-     * 加入日期查詢的資料
+     * 送出修改
      */
-    $("#dateSearch").click(function (e) {
-        let regex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
-        if (regex.test($("#datepicker").val())) {
-            search_date = $("#datepicker").val();
+    $(".sendModify").click(function (e) { 
+        let msg = $("#msg").val();
+        let id = $(this).attr("id");
+        if (msg === "") {
+            alert("請輸入留言!");
+        } else {
             $.ajax({
                 type: "POST",
                 url: "/oriboard_class_dateRestruct/php/post.php",
                 data: {
-                    "action": "index",
-                    "date": $("#datepicker").val()
+                    "action": "modify",
+                    "id": id,
+                    "msg": msg
                 },
                 success: function (response) {
                     response = JSON.parse(response);
-                    if (response === 0) {
-                        $("#list").empty();
-                        $("#list").append('<li class="list-group-item"><p>蝦密攏謀</p></li>');
-                    } else {
-                        dataToWeb(response["data"], permission, account);
-                        showPage(response["page"], response["pages"]);
+                    if (response === true) {
+                        alert("修改成功");
+                        $("#showModify").addClass('hidden');
+                        $("#"+id).parent().children("div").children("pre").text(msg);
                     }
                 }
             });
-        } else {
-            $("#datepicker").val("");
-            alert("時間格式不符!");
         }
-
     });
+
+    $(".hideModify").click(function (e) { 
+        $("#showModify").addClass('hidden');
+    });
+    
+    /**
+     * 加入日期查詢的資料
+     */
+    // $("#dateSearch").click(function (e) {
+    //     let regex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
+    //     if (regex.test($("#datepicker").val())) {
+    //         search_date = $("#datepicker").val();
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/oriboard_class_dateRestruct/php/post.php",
+    //             data: {
+    //                 "action": "index",
+    //                 "date": $("#datepicker").val()
+    //             },
+    //             success: function (response) {
+    //                 response = JSON.parse(response);
+    //                 if (response === 0) {
+    //                     $("#list").empty();
+    //                     $("#list").append('<li class="list-group-item"><p>蝦密攏謀</p></li>');
+    //                 } else {
+    //                     dataToWeb(response["data"], permission, account);
+    //                     showPage(response["page"], response["pages"]);
+    //                 }
+    //             }
+    //         });
+    //     } else {
+    //         $("#datepicker").val("");
+    //         alert("時間格式不符!");
+    //     }
+
+    // });
 })
 
 /**
@@ -74,8 +120,18 @@ $(document).ready(function () {
  */
 $(document).on('click', '.modify', function (event) {
     let id = $(this).parent().attr('id');
-    let url = "modify.html?id=" + id;
-    window.location.href = url;
+    $(".sendModify").attr('id', id);
+    $("#showModify").removeClass('hidden');
+    $.ajax({
+        type: "POST",
+        url: "/oriboard_class_dateRestruct/php/post.php?id="+id,
+        success: function (response) {
+            response = JSON.parse(response);
+            let msg = response["title"];
+            $("#msg").val(msg);
+        }
+    });
+    // window.location.href = url;
 });
 
 /**
@@ -101,41 +157,6 @@ $(document).on('click', '.remove', function (event) {
     } else {
         return false;
     }
-});
-
-/**
- * 點選分頁
- */
-$(document).on('click', '.page', function (event) {
-    // 沒有日期查詢或者日期查詢格式正確
-    let date = search_date;
-    let page = $(this).attr('id');
-    if (date == "" || date_format(date)) {
-        if (page_format(page)) {
-            $.ajax({
-                type: "POST",
-                url: "/oriboard_class_dateRestruct/php/post.php",
-                data: {
-                    "action": "index",
-                    "date": date,
-                    "page": page
-                },
-                success: function (response) {
-                    response = JSON.parse(response);
-                    dataToWeb(response["data"], permission, account);
-                    showPage(response["page"], response["pages"]);
-                }
-            });
-        } else {
-            alert("頁數格式不符!")
-        }
-    } else {
-        alert("時間格式不符!");
-    }
-});
-
-$(function () {
-    $("#datepicker").datepicker();
 });
 
 /**
@@ -183,28 +204,73 @@ function dataToWeb(response, permission, account) {
  * 顯示頁數
  */
 function showPage(page, pages) {
-    $("#page").empty();
+    $("#pagination").empty();
     for (let i = 1; i <= pages; i++) {
         if (i == page) {
-            $("#page").append('<a class="page" style="color: black;" id="' + i + '">' + i + '</a>');
+            $("#pagination").append('<li class="active page"><a href="?page=' + i + '">' + i + '</a></li>');
         } else {
-            $("#page").append('<a class="page" href="javascript: void(0)" id="' + i + '">' + i + '</a>');
+            $("#pagination").append('<li class="page"><a href="?page=' + i + '">' + i + '</a></li>');
         }
     }
 }
 
 /**
+ * 點選分頁
+ */
+// $(document).on('click', '.page', function (event) {
+//     // 沒有日期查詢或者日期查詢格式正確
+//     let date = search_date;
+//     let page = $(this).text();
+//     if (date == "" || date_format(date)) {
+//         if (page_format(page)) {
+//             $.ajax({
+//                 type: "POST",
+//                 url: "/oriboard_class_dateRestruct/php/post.php",
+//                 data: {
+//                     "action": "index",
+//                     "date": date,
+//                     "page": page
+//                 },
+//                 success: function (response) {
+//                     response = JSON.parse(response);
+//                     dataToWeb(response["data"], permission, account);
+//                     showPage(response["page"], response["pages"]);
+//                 }
+//             });
+//         } else {
+//             alert("頁數格式不符!")
+//         }
+//     } else {
+//         alert("時間格式不符!");
+//     }
+// });
+
+// $(function () {
+//     $("#datepicker").datepicker();
+// });
+
+/**
  * 檢查時間格式
  */
-function date_format(date) {
-    let regex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
-    return regex.test(date);
-}
+// function date_format(date) {
+//     let regex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
+//     return regex.test(date);
+// }
 
 /**
  * 檢查頁數格式(小數、負數、英文)
  */
-function page_format(page) {
-    let regex = /^\+?[1-9][0-9]*$/;
-    return regex.test(page);
-}
+// console.log("call:" + page_format(11));
+// function page_format(page) {
+//     let regex = /^\+?[1-9][0-9]*$/;
+//     let totalPages;
+//     $.ajax({
+//         type: "GET",
+//         url: "/oriboard_class_dateRestruct/php/post.php?show=totalPages",
+//         async: false,
+//         success: function (response) {
+//             totalPages = response;
+//         }
+//     });
+//     return regex.test(page) && (page < totalPages);
+// }
